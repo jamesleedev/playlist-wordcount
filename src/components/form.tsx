@@ -6,11 +6,7 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-
-interface FormInputs {
-  spotify: string;
-  word: string;
-}
+import { type FormData } from '@/types/form';
 
 const FORM_STATE = {
   ERROR: 'error',
@@ -37,7 +33,7 @@ export const Form: FC = () => {
     register,
     handleSubmit,
     formState: { errors, isValid, isDirty },
-  } = useForm<FormInputs>({
+  } = useForm<FormData>({
     defaultValues,
     mode: 'onChange',
     resolver: zodResolver(schema),
@@ -45,7 +41,7 @@ export const Form: FC = () => {
 
   const [formState, setFormState] = useState(FORM_STATE.IDLE);
 
-  const onSubmit: SubmitHandler<FormInputs> = (data) => {
+  const onSubmit: SubmitHandler<FormData> = (data) => {
     console.log(data);
   };
 
@@ -88,7 +84,7 @@ export const Form: FC = () => {
       </div>
       <Button
         type="submit"
-        className="mt-8 cursor-pointer disabled:cursor-not-allowed"
+        className="mt-8 hover:cursor-pointer"
         disabled={formState === FORM_STATE.SUBMITTING || !isValid || !isDirty}
       >
         Search
