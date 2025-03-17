@@ -1,6 +1,6 @@
-import { FC } from 'react';
 import { RiBlueskyFill, RiGithubFill, RiHome4Fill } from '@remixicon/react';
 import Link from 'next/link';
+import { type FC } from 'react';
 
 export const Navbar: FC = () => {
   return (
