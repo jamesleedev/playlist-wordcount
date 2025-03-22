@@ -1,12 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { type FC, useState } from 'react';
+import { type FC, useCallback, useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { type FormData } from '@/types/form';
+import { type SearchResponse, type SpotifyData } from '@/types/form';
 
 const FORM_STATE = {
   ERROR: 'error',
@@ -32,8 +32,9 @@ export const Form: FC = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isValid, isDirty },
-  } = useForm<FormData>({
+  } = useForm<SpotifyData>({
     defaultValues,
     mode: 'onChange',
     resolver: zodResolver(schema),
@@ -41,9 +42,35 @@ export const Form: FC = () => {
 
   const [formState, setFormState] = useState(FORM_STATE.IDLE);
 
-  const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log(data);
-  };
+  const onSubmit: SubmitHandler<SpotifyData> = useCallback(async (data) => {
+    setFormState(FORM_STATE.SUBMITTING);
+
+    try {
+      const response = await fetch('/api/search', {
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+      });
+
+      if (!response.ok) {
+        setFormState(FORM_STATE.ERROR);
+        const resp: SearchResponse = await response.json();
+
+        if (resp.errors) {
+          for (const [key, value] of Object.entries(resp.errors)) {
+            setError(key as keyof SpotifyData, { message: value });
+          }
+        }
+      } else {
+        setFormState(FORM_STATE.SUCCESS);
+      }
+    } catch (e) {
+      setFormState(FORM_STATE.ERROR);
+      console.error(e);
+    }
+  }, []);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-[40rem]">

@@ -1,10 +1,12 @@
-export interface FormData {
+export interface SpotifyData {
   spotify: string;
   word: string;
 }
 
-export interface Response {
+export interface SearchResponse {
   ok: boolean;
   msg: string;
-  errors?: Record<string, string>;
+  errors?: {
+    [Field in keyof SpotifyData]?: string;
+  };
 }
