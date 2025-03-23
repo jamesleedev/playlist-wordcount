@@ -9,4 +9,8 @@ export const ERROR_MESSAGES = {
   SEARCH_TERM: {
     MISSING: 'A search term is required.',
   },
+  GENERAL: {
+    IMPLEMENTATION:
+      'Something went wrong on my side, get in touch with me at my bsky @jamesl.net and I will look into it!',
+  },
 };

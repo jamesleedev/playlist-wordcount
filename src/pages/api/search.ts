@@ -15,16 +15,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return res.status(400).json({ ok: false, msg: 'An error occurred.', errors: validationErrors });
   }
 
-  const spotifyToken = await getSpotifyAccessToken(SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET);
-  console.log('/api/search spotifyToken :', spotifyToken);
+  let spotifyToken: string;
+
+  try {
+    spotifyToken = await getSpotifyAccessToken(SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ ok: false, msg: ERROR_MESSAGES.GENERAL.IMPLEMENTATION });
+  }
 
   const params = new URLSearchParams({
     market: 'US',
     fields: 'public,tracks(limit, next, total, items.track(name, artists.name))',
   });
   const endpoint = `https://api.spotify.com/v1/playlists/${processSpotifyField(data.spotify)}?${params.toString()}`;
-
-  console.log('/api/search endpoint :', endpoint);
 
   try {
     const playlistResp = await fetch(endpoint, {
