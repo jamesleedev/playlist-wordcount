@@ -2,7 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { ERROR_MESSAGES, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from '@/constants';
 import type { SearchResponse, SpotifyData } from '@/types/form';
-import { processSpotifyField, validateFormFields } from '@/utils/form';
+import { validateFormFields } from '@/utils/form';
+import { getPlaylistData } from '@/utils/playlist';
 import { getSpotifyAccessToken } from '@/utils/token';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<SearchResponse>) {
@@ -24,19 +25,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return res.status(500).json({ ok: false, msg: ERROR_MESSAGES.GENERAL.IMPLEMENTATION });
   }
 
-  const params = new URLSearchParams({
-    market: 'US',
-    fields: 'public,tracks(limit, next, total, items.track(name, artists.name))',
-  });
-  const endpoint = `https://api.spotify.com/v1/playlists/${processSpotifyField(data.spotify)}?${params.toString()}`;
+  let playlist;
 
   try {
-    const playlistResp = await fetch(endpoint, {
-      headers: {
-        Authorization: `Bearer ${spotifyToken}`,
-      },
-    });
-    const playlist = await playlistResp.json();
+    playlist = await getPlaylistData(data.spotify, spotifyToken);
 
     if (!playlist.public) {
       return res.status(400).json({
@@ -45,17 +37,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         errors: { spotify: ERROR_MESSAGES.SPOTIFY.URL_TYPE },
       });
     }
-
-    const track = playlist.tracks.items[0].track;
-
-    const lyricsResp = await fetch(`https://api.lyrics.ovh/v1/${track.artists[0].name}/${track.name}`);
-    const lyrics = await lyricsResp.json();
-
-    console.log(lyrics);
   } catch (e) {
     console.error(e);
-    return res.status(500).json({ ok: false, msg: 'An error occurred.' });
+    if (e instanceof Error) {
+      if (e.message === ERROR_MESSAGES.SPOTIFY.URL_TYPE) {
+        return res.status(400).json({ ok: false, msg: e.message, errors: { spotify: e.message } });
+      }
+    }
+
+    return res.status(500).json({ ok: false, msg: ERROR_MESSAGES.GENERAL.IMPLEMENTATION });
   }
+
+  const track = playlist.tracks.items.at(-1).track;
+  console.log('track:', track);
+
+  const lyricsEndpoint = encodeURI(`https://api.lyrics.ovh/v1/${track.artists[0].name}/${track.name}`);
+
+  console.log(lyricsEndpoint);
+
+  const lyricsResp = await fetch(lyricsEndpoint);
+  const lyrics = await lyricsResp.json();
+
+  console.log(lyrics);
 
   res.json({ ok: true, msg: 'Success' });
 }

@@ -33,7 +33,7 @@ export const sanitizeFormFields = (data: SpotifyData) => {
   return { spotify: trim(data.spotify), word: trim(data.word) };
 };
 
-export const processSpotifyField = (spotify: string) => {
+export const processSpotifyField = (spotify: string): string => {
   const urlObj = new URL(spotify);
 
   const paths = urlObj.pathname.split('/');
