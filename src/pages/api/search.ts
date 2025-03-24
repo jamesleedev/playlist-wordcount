@@ -2,13 +2,15 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { ERROR_MESSAGES, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from '@/constants';
 import type { SearchResponse, SpotifyData } from '@/types/form';
+import { type TrackWithApiResult, type TrackWithLyrics } from '@/types/lyrics';
+import { type SpotifyPlaylist } from '@/types/spotify';
 import { validateFormFields } from '@/utils/form';
+import { getAllLyrics, sortLyrics } from '@/utils/lyrics';
 import { getPlaylistData } from '@/utils/playlist';
 import { getSpotifyAccessToken } from '@/utils/token';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<SearchResponse>) {
   const data = req.body as SpotifyData;
-  console.log('/api/search data :', data);
 
   const validationErrors = validateFormFields(data);
 
@@ -25,7 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return res.status(500).json({ ok: false, msg: ERROR_MESSAGES.GENERAL.IMPLEMENTATION });
   }
 
-  let playlist;
+  let playlist: SpotifyPlaylist;
 
   try {
     playlist = await getPlaylistData(data.spotify, spotifyToken);
@@ -48,17 +50,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return res.status(500).json({ ok: false, msg: ERROR_MESSAGES.GENERAL.IMPLEMENTATION });
   }
 
-  const track = playlist.tracks.items.at(-1).track;
-  console.log('track:', track);
+  let lyrics: TrackWithApiResult[];
 
-  const lyricsEndpoint = encodeURI(`https://api.lyrics.ovh/v1/${track.artists[0].name}/${track.name}`);
+  try {
+    lyrics = await getAllLyrics(playlist, 3, 1000);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ ok: false, msg: ERROR_MESSAGES.GENERAL.IMPLEMENTATION });
+  }
 
-  console.log(lyricsEndpoint);
-
-  const lyricsResp = await fetch(lyricsEndpoint);
-  const lyrics = await lyricsResp.json();
-
-  console.log(lyrics);
+  const [found, notFound] = sortLyrics(lyrics);
 
   res.json({ ok: true, msg: 'Success' });
 }

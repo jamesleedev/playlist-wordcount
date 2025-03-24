@@ -1,12 +1,15 @@
 import { ERROR_MESSAGES } from '@/constants';
+import { type SpotifyPlaylist } from '@/types/spotify';
 import { processSpotifyField } from '@/utils/form';
+
+type GetPlaylistData = (playlistId: string, spotifyToken: string) => Promise<SpotifyPlaylist>;
 
 const params = new URLSearchParams({
   market: 'US',
-  fields: 'public,tracks(limit, next, total, items.track(name, artists.name))',
+  fields: 'public,tracks(limit, next, total, items.track(name, artists.name, id))',
 });
 
-export const getPlaylistData = async (playlistId: string, spotifyToken: string) => {
+export const getPlaylistData: GetPlaylistData = async (playlistId, spotifyToken) => {
   const endpoint = `https://api.spotify.com/v1/playlists/${processSpotifyField(playlistId)}?${params.toString()}`;
 
   try {
