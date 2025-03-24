@@ -76,7 +76,7 @@ export const Form: FC = () => {
     <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-[40rem]">
       <div>
         <Label htmlFor="spotify" className="mb-3">
-          Spotify share URL: *
+          Spotify playlist URL: *
         </Label>
         <Input
           id="spotify"
@@ -94,7 +94,7 @@ export const Form: FC = () => {
       </div>
       <div>
         <Label htmlFor="word" className="mb-3">
-          Search term *
+          Search term: *
         </Label>
         <Input
           id="word"
@@ -102,6 +102,7 @@ export const Form: FC = () => {
           className={errors.word?.message ? 'mb-2' : 'mb-12'}
           {...register('word')}
           aria-invalid={errors.word ? 'true' : 'false'}
+          placeholder="Penelope"
         />
         {errors.word?.message ? (
           <p className="mb-6 text-left text-xs leading-4 text-rose-700" role="alert">
