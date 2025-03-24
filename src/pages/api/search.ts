@@ -1,8 +1,9 @@
+import Fuse, { type IFuseOptions } from 'fuse.js';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { ERROR_MESSAGES, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from '@/constants';
 import type { SearchResponse, SpotifyData } from '@/types/form';
-import { type TrackWithApiResult, type TrackWithLyrics } from '@/types/lyrics';
+import { type TrackForSearch, type TrackWithApiResult, type TrackWithLyrics } from '@/types/lyrics';
 import { type SpotifyPlaylist } from '@/types/spotify';
 import { validateFormFields } from '@/utils/form';
 import { getAllLyrics, sortLyrics } from '@/utils/lyrics';
@@ -60,6 +61,27 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   }
 
   const [found, notFound] = sortLyrics(lyrics);
+
+  const fuseOptions: IFuseOptions<TrackForSearch> = {
+    ignoreLocation: true,
+    keys: ['lyrics.lyrics'],
+    threshold: 0.1,
+    useExtendedSearch: true,
+    includeScore: true,
+    includeMatches: true,
+    findAllMatches: true,
+  };
+
+  const fuse = new Fuse(
+    found.map((track) => {
+      return { ...track, lyrics: { lyrics: track.lyrics.lyrics.split(/\s+/) } };
+    }),
+    fuseOptions
+  );
+
+  const searchResults = fuse.search(data.word);
+
+  console.log(JSON.stringify(searchResults));
 
   res.json({ ok: true, msg: 'Success' });
 }
