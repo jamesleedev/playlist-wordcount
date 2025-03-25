@@ -5,7 +5,8 @@ import { type SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
-import { Success } from '@/components/success/success';
+import { Success, type SuccessProps } from '@/components/success/success';
+import { getSuccessProps } from '@/components/success/utils';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -45,7 +46,7 @@ export const Form: FC = () => {
   });
 
   const [formState, setFormState] = useState(FORM_STATE.IDLE);
-  const [stats, setStats] = useState({ count: 0, errors: 0 });
+  const [stats, setStats] = useState<SuccessProps>({ count: 0, errors: 0 });
 
   const onSubmit: SubmitHandler<SpotifyData> = useCallback(
     async (data) => {
@@ -72,8 +73,8 @@ export const Form: FC = () => {
 
           toast.error(respJson.msg);
         } else {
-          const data = await response.json();
-          setStats({ count: data.wordCount, errors: data.notFoundCount });
+          const data: SearchResponse = await response.json();
+          setStats(getSuccessProps(data));
           setFormState(FORM_STATE.SUCCESS);
           toast.success(data.msg);
         }

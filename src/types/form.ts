@@ -1,3 +1,5 @@
+import { type Track } from '@/types/spotify';
+
 export interface SpotifyData {
   spotify: string;
   word: string;
@@ -9,6 +11,12 @@ export interface SearchResponse {
   errors?: {
     [Field in keyof SpotifyData]?: string;
   };
-  wordCount?: number;
-  notFoundCount?: number;
+  totalWordCount?: number;
+  results?: {
+    tracks: (Track & { wordCount: number })[];
+  };
+  notFound?: {
+    count: number;
+    tracks: Track[];
+  };
 }

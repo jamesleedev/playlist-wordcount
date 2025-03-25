@@ -81,12 +81,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   const searchResults = fuse.search(data.word);
 
   const matches = searchResults.map((item) => (item.matches ? item.matches.length : 0));
-  const wordCount = matches.reduce((acc, next) => acc + next, 0);
+  const totalWordCount = matches.reduce((acc, next) => acc + next, 0);
 
   return res.json({
     ok: true,
     msg: MESSAGES.SUCCESS,
-    wordCount,
-    notFoundCount: notFound.length,
+    totalWordCount,
+    results: {
+      tracks: searchResults.map((result) => {
+        const { id, name, artists } = result.item;
+        return {
+          id,
+          name,
+          artists,
+          wordCount: result.matches ? result.matches.length : 0,
+        };
+      }),
+    },
+    notFound: {
+      count: notFound.length,
+      tracks: notFound.map((track) => ({ id: track.id, name: track.name, artists: track.artists })),
+    },
   });
 }
