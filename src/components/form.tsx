@@ -76,18 +76,18 @@ export const Form: FC = () => {
     <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-[40rem]">
       <div>
         <Label htmlFor="spotify" className="mb-3">
-          Spotify playlist URL: *
+          Public Spotify playlist URL: *
         </Label>
         <Input
           id="spotify"
           type="text"
           placeholder="https://open.spotify.com/playlist/..."
-          className={errors.spotify?.message ? 'mb-2' : 'mb-12'}
+          className={errors.spotify?.message ? 'mb-2' : 'mb-10'}
           {...register('spotify')}
           aria-invalid={errors.spotify?.message ? 'true' : 'false'}
         />
         {errors.spotify?.message ? (
-          <p className="mb-6 text-left text-xs leading-4 text-rose-700" role="alert">
+          <p className="mb-4 text-left text-xs leading-4 text-rose-700" role="alert">
             {errors.spotify.message}
           </p>
         ) : null}
@@ -99,20 +99,20 @@ export const Form: FC = () => {
         <Input
           id="word"
           type="text"
-          className={errors.word?.message ? 'mb-2' : 'mb-12'}
+          className={errors.word?.message ? 'mb-2' : 'mb-10'}
           {...register('word')}
           aria-invalid={errors.word ? 'true' : 'false'}
           placeholder="Penelope"
         />
         {errors.word?.message ? (
-          <p className="mb-6 text-left text-xs leading-4 text-rose-700" role="alert">
+          <p className="mb-4 text-left text-xs leading-4 text-rose-700" role="alert">
             {errors.word.message}
           </p>
         ) : null}
       </div>
       <Button
         type="submit"
-        className="mt-8 hover:cursor-pointer"
+        className="mt-4 hover:cursor-pointer"
         disabled={formState === FORM_STATE.SUBMITTING || !isValid || !isDirty}
       >
         Search
