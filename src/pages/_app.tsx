@@ -4,6 +4,8 @@ import type { AppProps } from 'next/app';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import Head from 'next/head';
 
+import { Toaster } from '@/components/ui/sonner';
+
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-inter',
@@ -24,6 +26,7 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <div className={`${inter.variable} ${jetBrainsMono.variable}`}>
         <Component {...pageProps} />
+        <Toaster />
       </div>
     </>
   );

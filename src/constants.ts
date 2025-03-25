@@ -1,17 +1,22 @@
 export const SPOTIFY_CLIENT_ID = process.env.SPOTIFY_CLIENT_ID;
 export const SPOTIFY_CLIENT_SECRET = process.env.SPOTIFY_CLIENT_SECRET;
 
-export const ERROR_MESSAGES = {
-  SPOTIFY: {
-    INVALID_URL: 'A valid Spotify playlist URL is required.',
-    URL_TYPE: 'The link must lead to a public Spotify playlist.',
-    RATE_LIMIT: 'Hitting Spotify rate limits. Get in touch with me at my bsky @jamesl.net or try again later.',
+export const MESSAGES = {
+  ERROR: {
+    SPOTIFY: {
+      INVALID_URL: 'A valid Spotify playlist URL is required.',
+      URL_TYPE: 'The link must lead to a public Spotify playlist.',
+      RATE_LIMIT: 'Hitting Spotify rate limits. Get in touch with me at my bsky @jamesl.net or try again later.',
+    },
+    SEARCH_TERM: {
+      MISSING: 'A search term is required.',
+    },
+    GENERAL: {
+      IMPLEMENTATION:
+        'Something went wrong on my side, get in touch with me at my bsky @jamesl.net and I will look into it!',
+      LYRICS_SERVICE:
+        'Something went wrong when getting lyrics from the lyrics service, get in touch with me at my bsky @jamesl.net or try again later.',
+    },
   },
-  SEARCH_TERM: {
-    MISSING: 'A search term is required.',
-  },
-  GENERAL: {
-    IMPLEMENTATION:
-      'Something went wrong on my side, get in touch with me at my bsky @jamesl.net and I will look into it!',
-  },
+  SUCCESS: 'Success! 😎🥳',
 };

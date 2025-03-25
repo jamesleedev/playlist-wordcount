@@ -1,4 +1,4 @@
-import { ERROR_MESSAGES } from '@/constants';
+import { MESSAGES } from '@/constants';
 import { type SpotifyPlaylist } from '@/types/spotify';
 import { processSpotifyField } from '@/utils/form';
 
@@ -21,9 +21,9 @@ export const getPlaylistData: GetPlaylistData = async (playlistId, spotifyToken)
 
     if (!response.ok) {
       if (response.status === 404) {
-        throw new Error(ERROR_MESSAGES.SPOTIFY.URL_TYPE);
+        throw new Error(MESSAGES.ERROR.SPOTIFY.URL_TYPE);
       } else if (response.status === 429) {
-        throw new Error(ERROR_MESSAGES.SPOTIFY.RATE_LIMIT);
+        throw new Error(MESSAGES.ERROR.SPOTIFY.RATE_LIMIT);
       }
     }
 

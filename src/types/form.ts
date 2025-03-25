@@ -9,4 +9,6 @@ export interface SearchResponse {
   errors?: {
     [Field in keyof SpotifyData]?: string;
   };
+  wordCount?: number;
+  notFoundCount?: number;
 }
