@@ -1,4 +1,5 @@
 import { Header } from '@/components/@index/header';
+import { Faq } from '@/components/faq';
 import { Footer } from '@/components/footer';
 import { Form } from '@/components/form';
 import { Navbar } from '@/components/navbar';
@@ -12,6 +13,7 @@ export default function Home() {
         <Header />
         <Form />
         <Success count={20} errors={8} />
+        <Faq />
       </main>
       <Footer />
     </div>
