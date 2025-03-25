@@ -1,11 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { RiLoader4Line, RiSearchLine } from '@remixicon/react';
 import { type FC, useCallback, useState } from 'react';
 import { type SubmitHandler, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
+import { Success } from '@/components/success/success';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { MESSAGES } from '@/constants';
 import { type SearchResponse, type SpotifyData } from '@/types/form';
 
 const FORM_STATE = {
@@ -41,6 +45,7 @@ export const Form: FC = () => {
   });
 
   const [formState, setFormState] = useState(FORM_STATE.IDLE);
+  const [stats, setStats] = useState({ count: 0, errors: 0 });
 
   const onSubmit: SubmitHandler<SpotifyData> = useCallback(async (data) => {
     setFormState(FORM_STATE.SUBMITTING);
@@ -56,67 +61,86 @@ export const Form: FC = () => {
 
       if (!response.ok) {
         setFormState(FORM_STATE.ERROR);
-        const resp: SearchResponse = await response.json();
+        const respJson: SearchResponse = await response.json();
 
-        if (resp.errors) {
-          for (const [key, value] of Object.entries(resp.errors)) {
+        if (respJson.errors) {
+          for (const [key, value] of Object.entries(respJson.errors)) {
             setError(key as keyof SpotifyData, { message: value });
           }
         }
+
+        toast.error(respJson.msg);
       } else {
+        const data = await response.json();
+        setStats({ count: data.wordCount, errors: data.notFoundCount });
         setFormState(FORM_STATE.SUCCESS);
+        toast.success(data.msg);
       }
     } catch (e) {
       setFormState(FORM_STATE.ERROR);
+      toast.error(MESSAGES.ERROR.GENERAL.IMPLEMENTATION);
       console.error(e);
     }
   }, []);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-[40rem]">
-      <div>
-        <Label htmlFor="spotify" className="mb-3">
-          Public Spotify playlist URL: *
-        </Label>
-        <Input
-          id="spotify"
-          type="text"
-          placeholder="https://open.spotify.com/playlist/..."
-          className={errors.spotify?.message ? 'mb-2' : 'mb-10'}
-          {...register('spotify')}
-          aria-invalid={errors.spotify?.message ? 'true' : 'false'}
-        />
-        {errors.spotify?.message ? (
-          <p className="mb-4 text-left text-xs leading-4 text-rose-700" role="alert">
-            {errors.spotify.message}
-          </p>
-        ) : null}
-      </div>
-      <div>
-        <Label htmlFor="word" className="mb-3">
-          Search term: *
-        </Label>
-        <Input
-          id="word"
-          type="text"
-          className={errors.word?.message ? 'mb-2' : 'mb-10'}
-          {...register('word')}
-          aria-invalid={errors.word ? 'true' : 'false'}
-          placeholder="Penelope"
-        />
-        {errors.word?.message ? (
-          <p className="mb-4 text-left text-xs leading-4 text-rose-700" role="alert">
-            {errors.word.message}
-          </p>
-        ) : null}
-      </div>
-      <Button
-        type="submit"
-        className="mt-4 hover:cursor-pointer"
-        disabled={formState === FORM_STATE.SUBMITTING || !isValid || !isDirty}
-      >
-        Search
-      </Button>
-    </form>
+    <section className="pb-32">
+      <form onSubmit={handleSubmit(onSubmit)} className="mx-auto max-w-[40rem]">
+        <div>
+          <Label htmlFor="spotify" className="mb-3">
+            Public Spotify playlist URL: *
+          </Label>
+          <Input
+            id="spotify"
+            type="text"
+            placeholder="https://open.spotify.com/playlist/..."
+            className={errors.spotify?.message ? 'mb-2' : 'mb-10'}
+            {...register('spotify')}
+            aria-invalid={errors.spotify?.message ? 'true' : 'false'}
+          />
+          {errors.spotify?.message ? (
+            <p className="mb-4 text-left text-xs leading-4 text-rose-700" role="alert">
+              {errors.spotify.message}
+            </p>
+          ) : null}
+        </div>
+        <div>
+          <Label htmlFor="word" className="mb-3">
+            Search term: *
+          </Label>
+          <Input
+            id="word"
+            type="text"
+            className={errors.word?.message ? 'mb-2' : 'mb-10'}
+            {...register('word')}
+            aria-invalid={errors.word ? 'true' : 'false'}
+            placeholder="Penelope"
+          />
+          {errors.word?.message ? (
+            <p className="mb-4 text-left text-xs leading-4 text-rose-700" role="alert">
+              {errors.word.message}
+            </p>
+          ) : null}
+        </div>
+        <Button
+          type="submit"
+          className="mt-4 hover:cursor-pointer"
+          disabled={formState === FORM_STATE.SUBMITTING || !isValid || !isDirty}
+        >
+          {formState === FORM_STATE.SUBMITTING ? (
+            <span className="flex items-center gap-2">
+              <RiLoader4Line className="fill-primary-foreground size-4 animate-spin" />
+              <span>Searching...</span>
+            </span>
+          ) : (
+            <span className="flex items-center gap-2">
+              <RiSearchLine className="fill-primary-foreground size-4" />
+              <span>Search</span>
+            </span>
+          )}
+        </Button>
+      </form>
+      {formState === FORM_STATE.SUCCESS && <Success {...stats} />}
+    </section>
   );
 };

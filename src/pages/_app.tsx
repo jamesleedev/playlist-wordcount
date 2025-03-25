@@ -26,7 +26,7 @@ export default function App({ Component, pageProps }: AppProps) {
       </Head>
       <div className={`${inter.variable} ${jetBrainsMono.variable}`}>
         <Component {...pageProps} />
-        <Toaster />
+        <Toaster richColors closeButton />
       </div>
     </>
   );

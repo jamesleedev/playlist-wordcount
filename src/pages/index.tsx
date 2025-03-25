@@ -12,7 +12,6 @@ export default function Home() {
       <main className="container grow py-20 text-center">
         <Header />
         <Form />
-        <Success count={20} errors={8} />
         <Faq />
       </main>
       <Footer />
