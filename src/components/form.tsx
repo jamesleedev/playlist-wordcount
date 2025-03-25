@@ -47,41 +47,44 @@ export const Form: FC = () => {
   const [formState, setFormState] = useState(FORM_STATE.IDLE);
   const [stats, setStats] = useState({ count: 0, errors: 0 });
 
-  const onSubmit: SubmitHandler<SpotifyData> = useCallback(async (data) => {
-    setFormState(FORM_STATE.SUBMITTING);
+  const onSubmit: SubmitHandler<SpotifyData> = useCallback(
+    async (data) => {
+      setFormState(FORM_STATE.SUBMITTING);
 
-    try {
-      const response = await fetch('/api/search', {
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        method: 'POST',
-      });
+      try {
+        const response = await fetch('/api/search', {
+          body: JSON.stringify(data),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          method: 'POST',
+        });
 
-      if (!response.ok) {
-        setFormState(FORM_STATE.ERROR);
-        const respJson: SearchResponse = await response.json();
+        if (!response.ok) {
+          setFormState(FORM_STATE.ERROR);
+          const respJson: SearchResponse = await response.json();
 
-        if (respJson.errors) {
-          for (const [key, value] of Object.entries(respJson.errors)) {
-            setError(key as keyof SpotifyData, { message: value });
+          if (respJson.errors) {
+            for (const [key, value] of Object.entries(respJson.errors)) {
+              setError(key as keyof SpotifyData, { message: value });
+            }
           }
-        }
 
-        toast.error(respJson.msg);
-      } else {
-        const data = await response.json();
-        setStats({ count: data.wordCount, errors: data.notFoundCount });
-        setFormState(FORM_STATE.SUCCESS);
-        toast.success(data.msg);
+          toast.error(respJson.msg);
+        } else {
+          const data = await response.json();
+          setStats({ count: data.wordCount, errors: data.notFoundCount });
+          setFormState(FORM_STATE.SUCCESS);
+          toast.success(data.msg);
+        }
+      } catch (e) {
+        setFormState(FORM_STATE.ERROR);
+        toast.error(MESSAGES.ERROR.GENERAL.IMPLEMENTATION);
+        console.error(e);
       }
-    } catch (e) {
-      setFormState(FORM_STATE.ERROR);
-      toast.error(MESSAGES.ERROR.GENERAL.IMPLEMENTATION);
-      console.error(e);
-    }
-  }, []);
+    },
+    [setError]
+  );
 
   return (
     <section className="pb-32">

@@ -3,7 +3,6 @@ import { Faq } from '@/components/faq';
 import { Footer } from '@/components/footer';
 import { Form } from '@/components/form';
 import { Navbar } from '@/components/navbar';
-import { Success } from '@/components/success/success';
 
 export default function Home() {
   return (
