@@ -118,7 +118,7 @@ export const Form: FC = () => {
             className={errors.word?.message ? 'mb-2' : 'mb-10'}
             {...register('word')}
             aria-invalid={errors.word ? 'true' : 'false'}
-            placeholder="Penelope"
+            placeholder="e.g. Penelope"
           />
           {errors.word?.message ? (
             <p className="mb-4 text-left text-xs leading-4 text-rose-700" role="alert">
