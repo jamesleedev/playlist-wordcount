@@ -1,17 +1,21 @@
 import { type FC } from 'react';
 
 import { Card } from '@/components/success/card/card';
+import { type SearchResponse } from '@/types/form';
 
 export interface SuccessProps {
-  count: number;
-  errors: number;
-  topSong?: {
-    name: string;
-    artist: string;
-  };
+  data: SearchResponse;
 }
 
-export const Success: FC<SuccessProps> = ({ count, errors, topSong }) => {
+export const Success: FC<SuccessProps> = ({ data }) => {
+  const results = data.results;
+  const topSong =
+    results && results.tracks.length > 0
+      ? { name: results.tracks[0].name, artist: results.tracks[0].artists[0].name }
+      : undefined;
+  const count = data.totalWordCount || 0;
+  const errors = data.notFound!.count;
+
   return (
     <div className="container mt-16 flex flex-col items-center justify-center gap-8">
       <h2>Summary</h2>
