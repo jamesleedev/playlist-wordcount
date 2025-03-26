@@ -54,7 +54,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   let lyrics: TrackWithApiResult[];
 
   try {
-    lyrics = await getAllLyrics(playlist, 3, 1000);
+    lyrics = await getAllLyrics(playlist, 10, 1000);
   } catch (e) {
     console.error(e);
     return res.status(500).json({ ok: false, msg: MESSAGES.ERROR.GENERAL.LYRICS_SERVICE });

@@ -1,3 +1,4 @@
+import { LYRICS } from '@/constants';
 import {
   type CreateLyricsPromise,
   type GetAllLyrics,
@@ -10,20 +11,17 @@ import { type Track } from '@/types/spotify';
 
 export const getAllLyrics: GetAllLyrics = async (playlist, connections, timeout) => {
   const tracks: Track[] = playlist.tracks.items.map((item) => item.track);
-  const processedTracks = tracks.map((track) => createLyricsPromise(track));
-  const queue: Promise<TrackWithApiResult>[][] = [];
+  const queue: Track[][] = [];
   const lyrics: TrackWithApiResult[] = [];
 
-  for (let i = 0; i < processedTracks.length; i += connections) {
-    queue.push(processedTracks.slice(i, i + connections));
+  for (let i = 0; i < tracks.length; i += connections) {
+    queue.push(tracks.slice(i, i + connections));
   }
 
   for (let j = 0; j < queue.length; j++) {
-    await new Promise((resolve) => setTimeout(resolve, timeout));
+    const tracks = queue[j];
 
-    const trackPromises = queue[j];
-
-    const lyricsList = await Promise.all(trackPromises);
+    const lyricsList = await Promise.all(tracks.map((track) => createLyricsPromise(track, timeout)));
 
     lyrics.push(...lyricsList);
   }
@@ -31,8 +29,15 @@ export const getAllLyrics: GetAllLyrics = async (playlist, connections, timeout)
   return lyrics;
 };
 
-const createLyricsPromise: CreateLyricsPromise = async (track) => {
+const createLyricsPromise: CreateLyricsPromise = async (track, timeout) => {
   const lyricsEndpoint = encodeURI(`https://api.lyrics.ovh/v1/${track.artists[0].name}/${track.name}`);
+
+  if (Object.keys(LYRICS).includes(track.id)) {
+    return { id: track.id, name: track.name, artists: track.artists, lyrics: { lyrics: LYRICS[track.id].lyrics } };
+  }
+
+  await new Promise((resolve) => setTimeout(resolve, timeout));
+
   const response = await fetch(lyricsEndpoint);
   const data = await response.json();
 

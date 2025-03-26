@@ -6,7 +6,7 @@ export type GetAllLyrics = (
   timeout: number
 ) => Promise<TrackWithApiResult[]>;
 
-export type CreateLyricsPromise = (track: Track) => Promise<TrackWithApiResult>;
+export type CreateLyricsPromise = (track: Track, timeout: number) => Promise<TrackWithApiResult>;
 
 export type SortLyrics = (tracks: TrackWithApiResult[]) => [TrackWithLyrics[], TrackWithError[]];
 
