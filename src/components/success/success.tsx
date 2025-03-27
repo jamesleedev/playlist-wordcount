@@ -10,11 +10,14 @@ export interface SuccessProps {
 
 export const Success: FC<SuccessProps> = ({ data }) => {
   const results = data.results;
-  const topSong = results && results.tracks.length > 0 ? results.tracks[0] : undefined;
+  const tracksSortedByResults = results ? [...results.tracks].sort((a, b) => b.wordCount - a.wordCount) : [];
+  const topSong = tracksSortedByResults.length > 0 ? tracksSortedByResults[0] : undefined;
   const count = data.totalWordCount || 0;
   const errors = data.notFound!.count;
   const matches = results ? results.tracks.filter((track) => track.wordCount > 0).length : 'N/A';
   const noMatches = results ? results.tracks.filter((track) => track.wordCount === 0).length : 'N/A';
+
+  console.log(tracksSortedByResults);
 
   return (
     <>
