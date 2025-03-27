@@ -12,12 +12,12 @@ export const Card: FC<Props> = ({ className, title, children }) => {
   return (
     <div
       className={cn(
-        'flex w-full grow flex-col justify-between gap-4 rounded-2xl border border-slate-300 p-8 md:w-1/3 md:flex-1/3',
+        'flex w-full flex-col justify-start gap-2 rounded-2xl border border-slate-300 p-4 md:max-w-[48%] md:gap-4 md:p-8 lg:max-w-[32%]',
         className
       )}
     >
-      <h3 className="text-xl font-medium text-emerald-900">{title}</h3>
-      <p>{children}</p>
+      <h3 className="text-lg font-medium text-emerald-900 md:text-xl">{title}</h3>
+      <p className="text-sm md:text-base">{children}</p>
     </div>
   );
 };

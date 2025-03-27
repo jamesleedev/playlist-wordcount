@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { MESSAGES } from '@/constants';
-import { type SearchResponse, type SpotifyData } from '@/types/form';
+import { type SearchRequest, type SearchResponse } from '@/types/form';
 
 const FORM_STATE = {
   ERROR: 'error',
@@ -38,7 +38,7 @@ export const Form: FC = () => {
     handleSubmit,
     setError,
     formState: { errors, isValid, isDirty },
-  } = useForm<SpotifyData>({
+  } = useForm<SearchRequest>({
     defaultValues,
     mode: 'onChange',
     resolver: zodResolver(schema),
@@ -47,7 +47,7 @@ export const Form: FC = () => {
   const [formState, setFormState] = useState(FORM_STATE.IDLE);
   const [response, setResponse] = useState<SearchResponse | null>(null);
 
-  const onSubmit: SubmitHandler<SpotifyData> = useCallback(
+  const onSubmit: SubmitHandler<SearchRequest> = useCallback(
     async (data) => {
       setFormState(FORM_STATE.SUBMITTING);
 
@@ -66,7 +66,7 @@ export const Form: FC = () => {
 
           if (respJson.errors) {
             for (const [key, value] of Object.entries(respJson.errors)) {
-              setError(key as keyof SpotifyData, { message: value });
+              setError(key as keyof SearchRequest, { message: value });
             }
           }
 

@@ -71,7 +71,7 @@
   --accent: oklch(0.968 0.007 247.896);
   --accent-foreground: oklch(0.208 0.042 265.755);
   --destructive: var(--color-rose-700);
-  --border: oklch(0.929 0.013 255.508);
+  --border: var(--color-slate-200);
   --input: var(--color-slate-400);
   --ring: var(--color-slate-700);
   --chart-1: oklch(0.646 0.222 41.116);
@@ -129,7 +129,7 @@
   }
 
   h2 {
-    @apply text-3xl font-semibold text-emerald-900
+    @apply text-2xl md:text-3xl font-semibold text-emerald-900
   }
 
   button {

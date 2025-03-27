@@ -2,7 +2,7 @@ import Fuse, { type IFuseOptions } from 'fuse.js';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { MESSAGES, SPOTIFY_CLIENT_ID, SPOTIFY_CLIENT_SECRET } from '@/constants';
-import type { SearchResponse, SpotifyData } from '@/types/form';
+import type { SearchRequest, SearchResponse } from '@/types/form';
 import { type TrackForSearch, type TrackWithApiResult } from '@/types/lyrics';
 import { type SpotifyPlaylist } from '@/types/spotify';
 import { validateFormFields } from '@/utils/form';
@@ -11,7 +11,7 @@ import { getPlaylistData } from '@/utils/playlist';
 import { getSpotifyAccessToken } from '@/utils/token';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<SearchResponse>) {
-  const data = req.body as SpotifyData;
+  const data = req.body as SearchRequest;
 
   const validationErrors = validateFormFields(data);
 
@@ -88,16 +88,20 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     msg: MESSAGES.SUCCESS,
     totalWordCount,
     results: {
-      tracks: searchResults.map((result) => {
-        const { id, name, artists } = result.item;
+      tracks: playlist.tracks.items.map((result) => {
+        const { id, name, artists } = result.track;
+
+        const matches = searchResults.find((item) => item.item.id === id);
+
         return {
           id,
           name,
           artists,
-          wordCount: result.matches ? result.matches.length : 0,
+          wordCount: matches?.matches ? matches.matches.length : 0,
         };
       }),
     },
+    found,
     notFound: {
       count: notFound.length,
       tracks: notFound.map((track) => ({ id: track.id, name: track.name, artists: track.artists })),

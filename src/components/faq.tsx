@@ -15,13 +15,13 @@ const CONTENT = [
 
 export const Faq: FC = () => {
   return (
-    <div>
+    <section>
       <h2 className="mb-4">FAQs</h2>
       <div className="text-left">
         <Accordion type="single" collapsible className="w-full">
           {CONTENT.map(({ q, a }) => (
-            <AccordionItem value={q} key={q}>
-              <AccordionTrigger className="font-bold text-emerald-800">{q}</AccordionTrigger>
+            <AccordionItem value={q} key={q} className="border-b-slate-300">
+              <AccordionTrigger className="font-bold text-slate-600">{q}</AccordionTrigger>
               <AccordionContent>
                 <p>{a}</p>
               </AccordionContent>
@@ -29,6 +29,6 @@ export const Faq: FC = () => {
           ))}
         </Accordion>
       </div>
-    </div>
+    </section>
   );
 };

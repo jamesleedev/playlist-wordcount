@@ -3,7 +3,7 @@ import { type FC } from 'react';
 export const Header: FC = () => {
   return (
     <header className="mx-auto mb-12 max-w-[40rem] text-center">
-      <h1 className="mb-8 text-4xl font-medium text-emerald-900">Playlist Word Count</h1>
+      <h1 className="mb-8 text-3xl font-medium text-emerald-900 md:text-4xl">Playlist Word Count</h1>
       <p className="mb-4">
         This is a small site I made in like a week to count how many shots to take in a drinking game when a word comes
         up in a playlist.

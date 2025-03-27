@@ -1,9 +1,9 @@
 import { isURL, trim } from 'validator';
 
 import { MESSAGES } from '@/constants';
-import { type SearchResponse, type SpotifyData } from '@/types/form';
+import { type SearchRequest, type SearchResponse } from '@/types/form';
 
-export const validateFormFields = (data: SpotifyData) => {
+export const validateFormFields = (data: SearchRequest) => {
   const errors: SearchResponse['errors'] = {};
   const { spotify, word } = sanitizeFormFields(data);
 
@@ -29,7 +29,7 @@ export const validateFormFields = (data: SpotifyData) => {
   return Object.keys(errors).length > 0 ? errors : null;
 };
 
-export const sanitizeFormFields = (data: SpotifyData) => {
+export const sanitizeFormFields = (data: SearchRequest) => {
   return { spotify: trim(data.spotify), word: trim(data.word) };
 };
 
