@@ -29,7 +29,6 @@ export const getPlaylistData: GetPlaylistData = async (playlistId, spotifyToken)
 
     return await response.json();
   } catch (e) {
-    console.error('Error in getPlaylistData():', e);
     throw e;
   }
 };
