@@ -7,5 +7,9 @@ export async function register() {
     const config: NodeCache.Options = {};
 
     global.cacheAccessToken = new Cache(config);
+
+    await import('pino');
+    // @ts-expect-error no types
+    await import('next-logger');
   }
 }
