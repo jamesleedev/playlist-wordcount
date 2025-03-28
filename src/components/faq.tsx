@@ -9,7 +9,19 @@ const CONTENT = [
   },
   {
     q: 'Where is your cookie banner?',
-    a: "This site is completely free of cookies, in fact I'm not even logging your IP. The only thing you should know about is Cloudflare's privacy policy and terms of service.",
+    a: (
+      <>
+        This site is completely free of cookies, in fact I&apos;m not even logging your IP. The only thing you should
+        know about is Cloudflare&apos;s{' '}
+        <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer">
+          privacy policy
+        </a>{' '}
+        and{' '}
+        <a href="https://www.cloudflare.com/website-terms/" target="_blank" rel="noopener noreferrer">
+          terms of service.
+        </a>
+      </>
+    ),
   },
 ];
 

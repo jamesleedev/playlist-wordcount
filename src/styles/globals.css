@@ -129,10 +129,14 @@
   }
 
   h2 {
-    @apply text-2xl md:text-3xl font-semibold text-emerald-900
+    @apply text-2xl font-semibold text-emerald-900 md:text-3xl;
   }
 
   button {
     @apply cursor-pointer disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  a {
+    @apply text-emerald-900 underline visited:text-emerald-900 hover:text-emerald-800;
   }
 }

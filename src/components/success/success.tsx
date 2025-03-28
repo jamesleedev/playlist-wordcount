@@ -17,8 +17,6 @@ export const Success: FC<SuccessProps> = ({ data }) => {
   const matches = results ? results.tracks.filter((track) => track.wordCount > 0).length : 'N/A';
   const noMatches = results ? results.tracks.filter((track) => track.wordCount === 0).length : 'N/A';
 
-  console.log(tracksSortedByResults);
-
   return (
     <>
       <Summary count={count} matches={matches} noMatches={noMatches} errors={errors} topSong={topSong} />
