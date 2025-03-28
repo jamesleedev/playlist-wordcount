@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ['@remixicon/react', 'lucide-react'],
   },
+  output: 'standalone',
 };
 
 const bundleAnalyzer = withBundleAnalyzer();
