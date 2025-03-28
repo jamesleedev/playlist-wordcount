@@ -1,4 +1,4 @@
-import { type FC, useMemo } from 'react';
+import { type FC, Fragment, useMemo } from 'react';
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Separator } from '@/components/ui/separator';
@@ -39,21 +39,21 @@ export const Details: FC<Props> = ({ data }) => {
                   <Separator className="col-span-3" />
                   {detailsData.map((track, index) => {
                     return (
-                      <>
+                      <Fragment key={track.id}>
                         <p>
                           {track.name} - {track.artists[0].name}
                         </p>
                         <Separator orientation="vertical" />
                         <p className="w-full shrink-0 grow-0 text-right font-mono">{track.wordCount}</p>
                         {index !== detailsData.length - 1 ? <Separator className="col-span-3" /> : null}
-                      </>
+                      </Fragment>
                     );
                   })}
                 </div>
               </AccordionContent>
             </AccordionItem>
           ) : null}
-          {data.notFound ? (
+          {data.notFound && data.notFound.count > 0 ? (
             <AccordionItem value="errors">
               <AccordionTrigger className={itemClassName}>Missing Lyrics</AccordionTrigger>
               <AccordionContent className={contentClassName}>
@@ -63,12 +63,12 @@ export const Details: FC<Props> = ({ data }) => {
                   <Separator />
                   {data.notFound.tracks.map((track) => {
                     return (
-                      <>
+                      <Fragment key={track.id}>
                         <p>
                           {track.name} - {track.artists[0].name}
                         </p>
                         <Separator className="last:hidden" />
-                      </>
+                      </Fragment>
                     );
                   })}
                 </div>
