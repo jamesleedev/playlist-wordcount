@@ -10,11 +10,11 @@ export default function Home() {
   return (
     <>
       <NextSeo
-        title="Playlist Wordcount | Jamesl.net"
+        title="Playlist Wordcount | jamesl.net"
         description="Simple app to count words in a playlist, does exactly what the name suggests"
         noindex
         openGraph={{
-          title: 'Playlist Wordcount | Jamesl.net',
+          title: 'Playlist Wordcount | jamesl.net',
           description: 'Simple app to count words in a playlist, does exactly what the name suggests',
           url: 'https://pwc.jamesl.net',
           site_name: 'Playlist Wordcount',

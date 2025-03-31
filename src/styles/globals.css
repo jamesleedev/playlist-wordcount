@@ -128,6 +128,10 @@
     @apply bg-background text-foreground;
   }
 
+  h1 {
+    @apply mb-8 text-3xl font-medium text-emerald-900 md:text-4xl
+  }
+
   h2 {
     @apply text-2xl font-semibold text-emerald-900 md:text-3xl;
   }
