@@ -5,7 +5,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 const CONTENT = [
   {
     q: 'Why are some of my songs missing lyrics?',
-    a: "This is due to the limitation of the lyrics.ovh API, and sadly there's nothing I can do about it 😭 I'm looking into better solutions though.",
+    a: "This is due to the limitation of the lyrics.ovh API, and sadly there's nothing I can do about it 😭 I also don't want to scrape any copyrighted works and get into legal trouble.",
   },
   {
     q: 'Where is your cookie banner?',
