@@ -18,7 +18,6 @@ export default function Custom404() {
             </Link>
           </Button>
         </main>
-        <p className="mb-2 text-xs">&copy; 2025 jamesl.net</p>
       </div>
     </>
   );

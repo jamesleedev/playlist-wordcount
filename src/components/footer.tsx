@@ -4,9 +4,9 @@ export const Footer: FC = () => {
   return (
     <footer className="container py-2 text-center">
       <p className="text-xs">
-        &copy; 2025 jamesl.net, with the exception of lyrics, which are works of their respective copyright holders.
-        This was a personal project made for fun, and will not be monetised. If you are a copyright holder, and have
-        concerns regarding copyright violations, please get in touch at james@jamesl.net.
+        This is a personal project made for fun and research, which will not be monetised. Whilst I believe my usage of
+        lyrics falls under fair use, please get in touch at james@jamesl.net if this application is infringing on your
+        rights as a copyright holder.
       </p>
     </footer>
   );
