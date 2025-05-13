@@ -4,6 +4,8 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { type SearchResponse, type SearchResult } from '@/types/form';
+import { type TrackWithLyrics } from '@/types/lyrics';
+import { type Track } from '@/types/spotify';
 
 interface Props {
   data: SearchResponse;
@@ -13,14 +15,16 @@ const itemClassName = cn('text-lg md:text-xl font-medium text-emerald-800 hover:
 const contentClassName = cn('px-4 text-sm md:text-base');
 
 export const Details: FC<Props> = ({ data }) => {
+  const foundTracks: TrackWithLyrics[] = useMemo(() => (data.results && data.results.found) || [], [data]);
+  const notFoundTracks: Track[] = useMemo(() => (data.results && data.results.notFound) || [], [data]);
   const detailsData: (SearchResult & { hasLyrics: boolean })[] = useMemo(() => {
     return data.results
       ? data.results?.tracks.map((track) => ({
           ...track,
-          hasLyrics: !!(data.found && data.found.find((foundTrack) => foundTrack.id === track.id) !== undefined),
+          hasLyrics: foundTracks.find((foundTrack) => foundTrack.id === track.id) !== undefined,
         }))
       : [];
-  }, [data]);
+  }, [data, foundTracks]);
 
   return (
     <section className="mt-16 flex flex-col items-center justify-center gap-8 text-left">
@@ -53,7 +57,7 @@ export const Details: FC<Props> = ({ data }) => {
               </AccordionContent>
             </AccordionItem>
           ) : null}
-          {data.notFound && data.notFound.count > 0 ? (
+          {notFoundTracks && notFoundTracks.length > 0 ? (
             <AccordionItem value="errors">
               <AccordionTrigger className={itemClassName}>Missing Lyrics</AccordionTrigger>
               <AccordionContent className={contentClassName}>
@@ -61,7 +65,7 @@ export const Details: FC<Props> = ({ data }) => {
                 <div className="mb-4 flex flex-col gap-2">
                   <p className="font-semibold">Name - Artist</p>
                   <Separator />
-                  {data.notFound.tracks.map((track) => {
+                  {notFoundTracks.map((track) => {
                     return (
                       <Fragment key={track.id}>
                         <p>

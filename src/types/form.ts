@@ -14,13 +14,13 @@ export interface SearchResponse {
   errors?: {
     [Field in keyof SearchRequest]?: string;
   };
-  totalWordCount?: number;
   results?: {
     tracks: SearchResult[];
+    found?: TrackWithLyrics[];
+    notFound?: Track[];
   };
-  found?: TrackWithLyrics[];
-  notFound?: {
-    count: number;
-    tracks: Track[];
+  meta?: {
+    notFoundCount: number;
+    totalWordCount?: number;
   };
 }

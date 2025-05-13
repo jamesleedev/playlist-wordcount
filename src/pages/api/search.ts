@@ -86,7 +86,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   return res.json({
     ok: true,
     msg: MESSAGES.SUCCESS,
-    totalWordCount,
     results: {
       tracks: playlist.tracks.items.map((result) => {
         const { id, name, artists } = result.track;
@@ -100,11 +99,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
           wordCount: matches?.matches ? matches.matches.length : 0,
         };
       }),
+      found,
+      notFound: notFound.map((track) => ({ id: track.id, name: track.name, artists: track.artists })),
     },
-    found,
-    notFound: {
-      count: notFound.length,
-      tracks: notFound.map((track) => ({ id: track.id, name: track.name, artists: track.artists })),
+    meta: {
+      totalWordCount,
+      notFoundCount: notFound.length,
     },
   });
 }
